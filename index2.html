@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Houbička v AR</title>
+  <title>3D objekty v AR</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
   <style>
     * {
@@ -21,15 +21,36 @@
       font-family: system-ui, -apple-system, sans-serif;
       color: #222;
     }
+    .prepinac {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .tab-btn {
+      background: #e2e2e2;
+      color: #222;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .tab-btn.aktivni {
+      background: #111;
+      color: #fff;
+    }
     .viewer-box {
       width: 100%;
       max-width: 680px;
-      height: 70vh;
+      height: 68vh;
       min-height: 360px;
       background: #ffffff;
       border-radius: 16px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
       overflow: hidden;
+      position: relative;
     }
     model-viewer {
       width: 100%;
@@ -42,7 +63,6 @@
       color: #555;
       text-align: center;
     }
-    /* Vlastní tlačítko pro AR */
     .ar-tlacitko {
       background: #111;
       color: #fff;
@@ -59,9 +79,19 @@
   </style>
 </head>
 <body>
+  <div class="prepinac">
+    <button class="tab-btn aktivni" onclick="zmenModel('./houbicka.glb', '3D model houbičky', this)">
+      Houbička
+    </button>
+    <button class="tab-btn" onclick="zmenModel('./studna.glb', '3D model studny', this)">
+      Studna
+    </button>
+  </div>
+
   <div class="viewer-box">
     <model-viewer
-      src="houbicky.glb"
+      id="ar-viewer"
+      src="studnaa-compressed.glb"
       alt="3D model houbičky"
       ar
       ar-modes="webxr scene-viewer quick-look"
@@ -75,7 +105,18 @@
   </div>
 
   <p class="popisek">
-    Otoč houbičku prstem nebo myší. Na mobilu klepni na <strong>Zobrazit v AR</strong> a umísti ji do prostoru.
+    Vyber model nahoře, otoč ho prstem nebo myší a na mobilu klepni na <strong>Zobrazit v AR</strong>.
   </p>
+
+  <script>
+    function zmenModel(soubor, popis, tlacitko) {
+      const viewer = document.getElementById('ar-viewer');
+      viewer.src = soubor;
+      viewer.alt = popis;
+
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('aktivni'));
+      tlacitko.classList.add('aktivni');
+    }
+  </script>
 </body>
 </html>
